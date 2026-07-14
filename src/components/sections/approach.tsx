@@ -1,9 +1,13 @@
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { methodology, distinctions } from "@/content/approach";
-import { home } from "@/content/home";
+import { getMethodology, getDistinctions } from "@/content/approach";
+import { getHome } from "@/content/home";
+import type { Locale } from "@/i18n/config";
 
-export function Approach() {
+export function Approach({ locale }: { locale: Locale }) {
+  const methodology = getMethodology(locale);
+  const distinctions = getDistinctions(locale);
+  const intro = getHome(locale).approachIntro;
   return (
     <section
       id="approach"
@@ -13,9 +17,9 @@ export function Approach() {
         {/* Heading */}
         <div className="lg:sticky lg:top-32 lg:self-start">
           <SectionHeading
-            eyebrow={home.approachIntro.eyebrow}
-            title={home.approachIntro.title}
-            lede={home.approachIntro.body}
+            eyebrow={intro.eyebrow}
+            title={intro.title}
+            lede={intro.body}
             titleClassName="text-display-md"
           />
         </div>

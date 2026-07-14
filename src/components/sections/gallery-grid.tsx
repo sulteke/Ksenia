@@ -10,7 +10,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ArtImage } from "@/components/shared/art-image";
-import { gallery } from "@/content/gallery";
+import { getGallery } from "@/content/gallery";
+import { getUi } from "@/content/ui";
+import type { Locale } from "@/i18n/config";
 
 const ASPECT: Record<string, string> = {
   tall: "aspect-[3/4]",
@@ -19,7 +21,9 @@ const ASPECT: Record<string, string> = {
 };
 
 
-export function GalleryGrid() {
+export function GalleryGrid({ locale }: { locale: Locale }) {
+  const gallery = getGallery(locale);
+  const ui = getUi(locale).gallery;
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const count = gallery.length;
@@ -111,7 +115,7 @@ export function GalleryGrid() {
             <button
               type="button"
               onClick={() => go(-1)}
-              aria-label="Previous image"
+              aria-label={ui.prev}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-cream/25 text-cream transition-colors hover:border-gold hover:text-gold"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -122,7 +126,7 @@ export function GalleryGrid() {
             <button
               type="button"
               onClick={() => go(1)}
-              aria-label="Next image"
+              aria-label={ui.next}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-cream/25 text-cream transition-colors hover:border-gold hover:text-gold"
             >
               <ArrowRight className="h-5 w-5" />

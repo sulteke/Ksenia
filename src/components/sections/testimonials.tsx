@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Quote, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { testimonials } from "@/content/testimonials";
+import { getTestimonials } from "@/content/testimonials";
+import { getUi } from "@/content/ui";
+import type { Locale } from "@/i18n/config";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -15,7 +17,9 @@ const variants = {
   exit: (dir: number) => ({ x: dir > 0 ? -64 : 64, opacity: 0, filter: "blur(8px)" }),
 };
 
-export function Testimonials() {
+export function Testimonials({ locale }: { locale: Locale }) {
+  const testimonials = getTestimonials(locale);
+  const ui = getUi(locale).testimonials;
   const count = testimonials.length;
   const [[index, dir], setState] = useState<[number, number]>([0, 0]);
   const [paused, setPaused] = useState(false);
@@ -40,8 +44,8 @@ export function Testimonials() {
     >
       <div className="container-x">
         <SectionHeading
-          eyebrow="Kind words"
-          title="Held with trust, remembered with warmth."
+          eyebrow={ui.eyebrow}
+          title={ui.title}
           align="center"
         />
 
@@ -91,7 +95,7 @@ export function Testimonials() {
             <button
               type="button"
               onClick={() => go(-1)}
-              aria-label="Previous testimonial"
+              aria-label={ui.prev}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-espresso/15 text-espresso transition-colors hover:border-gold hover:text-gold"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -102,7 +106,7 @@ export function Testimonials() {
                 <button
                   key={i}
                   type="button"
-                  aria-label={`Go to testimonial ${i + 1}`}
+                  aria-label={`${ui.goto} ${i + 1}`}
                   onClick={() => setState([i, i > index ? 1 : -1])}
                   className={cn(
                     "h-2 rounded-full transition-all duration-500 ease-luxe",
@@ -117,7 +121,7 @@ export function Testimonials() {
             <button
               type="button"
               onClick={() => go(1)}
-              aria-label="Next testimonial"
+              aria-label={ui.next}
               className="flex h-12 w-12 items-center justify-center rounded-full border border-espresso/15 text-espresso transition-colors hover:border-gold hover:text-gold"
             >
               <ArrowRight className="h-5 w-5" />

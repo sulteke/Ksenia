@@ -6,11 +6,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { site } from "@/content/site";
+import { getUi } from "@/content/ui";
 import { whatsappLink } from "@/lib/utils";
+import { localizedPath, type Locale } from "@/i18n/config";
 
 /** Native-feeling sticky action bar for mobile, revealed after the hero. */
-export function MobileCta() {
+export function MobileCta({ locale }: { locale: Locale }) {
   const [show, setShow] = useState(false);
+  const ui = getUi(locale);
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > 640);
@@ -31,16 +34,16 @@ export function MobileCta() {
         >
           <div className="glass flex items-center gap-2 rounded-full p-2 shadow-lift">
             <a
-              href={whatsappLink(site.contact.whatsapp, "Hi Aurelia, I'd love to book a session.")}
+              href={whatsappLink(site.contact.whatsapp, ui.mobile.whatsappMessage)}
               target="_blank"
               rel="noreferrer"
-              aria-label="Message on WhatsApp"
+              aria-label="WhatsApp"
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cream text-espresso transition-colors hover:bg-linen"
             >
               <MessageCircle className="h-5 w-5" />
             </a>
             <Button asChild size="md" className="h-12 flex-1">
-              <Link href="/#contact">Book a session</Link>
+              <Link href={localizedPath(locale, "/#contact")}>{ui.book}</Link>
             </Button>
           </div>
         </motion.div>

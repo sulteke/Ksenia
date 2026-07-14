@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
-import { about } from "@/content/about";
-import { site } from "@/content/site";
+import { getAbout } from "@/content/about";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { Parallax } from "@/components/motion/parallax";
@@ -8,14 +8,31 @@ import { WordReveal } from "@/components/motion/text-reveal";
 import { ArtImage } from "@/components/shared/art-image";
 import { StatsBand } from "@/components/sections/stats-band";
 import { CtaBand } from "@/components/sections/cta-band";
+import type { Locale } from "@/i18n/config";
 
-export const metadata = buildMetadata({
-  title: `About ${site.founder}`,
-  description: about.mission.body,
-  path: "/about",
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const about = getAbout(locale);
+  return buildMetadata({
+    locale,
+    title: about.title,
+    description: about.mission.body,
+    path: "/about",
+  });
+}
 
-export default function AboutPage() {
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  const about = getAbout(locale);
+
   return (
     <>
       {/* HERO */}
@@ -76,8 +93,8 @@ export default function AboutPage() {
         </div>
         <Reveal>
           <blockquote className="mx-auto mt-14 max-w-3xl text-balance text-center font-display text-3xl leading-snug text-ink sm:text-4xl">
-            “Calm is not something I give you. It’s something I help you
-            <span className="italic text-gold"> remember.</span>”
+            “{about.quote}
+            <span className="italic text-gold"> {about.quoteAccent}</span>”
           </blockquote>
         </Reveal>
       </section>
@@ -107,8 +124,8 @@ export default function AboutPage() {
       {/* VALUES */}
       <section className="container-x py-24 sm:py-32">
         <SectionHeading
-          eyebrow="What I hold to"
-          title="The values beneath the work."
+          eyebrow={about.valuesEyebrow}
+          title={about.valuesTitle}
           align="center"
         />
         <Stagger className="mt-14 grid gap-6 sm:grid-cols-2">
@@ -127,14 +144,15 @@ export default function AboutPage() {
         </Stagger>
       </section>
 
-      <StatsBand />
+      <StatsBand locale={locale} />
 
       <CtaBand
-        eyebrow="Let’s begin"
-        title="Come home to yourself."
-        body="Wherever you are right now is the perfect place to start. Reach out, and we’ll take the first gentle step together."
-        primary={{ label: "Book a session", href: "/#contact" }}
-        secondary={{ label: "Explore the work", href: "/#services" }}
+        locale={locale}
+        eyebrow={about.ctaEyebrow}
+        title={about.ctaTitle}
+        body={about.ctaBody}
+        primary={{ label: about.ctaPrimary, href: "/#contact" }}
+        secondary={{ label: about.ctaSecondary, href: "/#services" }}
       />
     </>
   );

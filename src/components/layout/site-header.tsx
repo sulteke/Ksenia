@@ -9,14 +9,23 @@ import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
 import { Magnetic } from "@/components/motion/magnetic";
-import { primaryNav, site, contactChannels } from "@/content/site";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { getPrimaryNav, getContactChannels, getSiteCopy } from "@/content/site";
+import { getUi } from "@/content/ui";
+import { localizedPath, type Locale } from "@/i18n/config";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-export function SiteHeader() {
+export function SiteHeader({ locale }: { locale: Locale }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+
+  const nav = getPrimaryNav(locale);
+  const ui = getUi(locale);
+  const channels = getContactChannels(locale);
+  const location = getSiteCopy(locale).location;
+  const base = `/${locale}`;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -36,8 +45,9 @@ export function SiteHeader() {
 
   const isActive = (href: string) => {
     const clean = href.split("#")[0];
-    if (clean === "/") return pathname === "/";
-    return clean !== "" && pathname.startsWith(clean);
+    if (clean === "/" || clean === "") return pathname === base;
+    const target = `${base}${clean}`;
+    return pathname === target || pathname.startsWith(`${target}/`);
   };
 
   return (
@@ -51,13 +61,13 @@ export function SiteHeader() {
         )}
       >
         <div className="container-x flex items-center justify-between gap-6">
-          <Logo />
+          <Logo locale={locale} />
 
           <nav className="hidden items-center gap-9 lg:flex">
-            {primaryNav.map((item) => (
+            {nav.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={localizedPath(locale, item.href)}
                 className={cn(
                   "link-underline text-sm font-medium tracking-tight text-espresso/80 transition-colors hover:text-ink",
                   isActive(item.href) && "text-ink",
@@ -69,16 +79,17 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitcher className="hidden sm:inline-flex" />
             <Magnetic className="hidden sm:inline-flex" strength={0.4}>
               <Button asChild size="sm" variant="primary">
-                <Link href="/#contact">Book a session</Link>
+                <Link href={localizedPath(locale, "/#contact")}>{ui.book}</Link>
               </Button>
             </Magnetic>
 
             <button
               type="button"
               onClick={() => setOpen(true)}
-              aria-label="Open menu"
+              aria-label="Menu"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-espresso/15 text-ink transition-colors hover:bg-espresso/[0.05] lg:hidden"
             >
               <Menu className="h-5 w-5" />
@@ -97,11 +108,11 @@ export function SiteHeader() {
             transition={{ duration: 0.6, ease: EASE }}
           >
             <div className="container-x flex items-center justify-between py-5">
-              <Logo />
+              <Logo locale={locale} />
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close menu"
+                aria-label="Close"
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-espresso/15 text-ink"
               >
                 <X className="h-5 w-5" />
@@ -109,7 +120,7 @@ export function SiteHeader() {
             </div>
 
             <nav className="container-x mt-6 flex flex-1 flex-col justify-center">
-              {primaryNav.map((item, i) => (
+              {nav.map((item, i) => (
                 <motion.div
                   key={item.href}
                   initial={{ opacity: 0, y: 24 }}
@@ -117,7 +128,7 @@ export function SiteHeader() {
                   transition={{ delay: 0.15 + i * 0.07, duration: 0.6, ease: EASE }}
                 >
                   <Link
-                    href={item.href}
+                    href={localizedPath(locale, item.href)}
                     className="block border-b border-espresso/10 py-5 font-display text-3xl text-ink"
                   >
                     {item.label}
@@ -132,11 +143,14 @@ export function SiteHeader() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6, ease: EASE }}
             >
-              <Button asChild size="lg" variant="primary" className="w-full">
-                <Link href="/#contact">Book a session</Link>
-              </Button>
+              <div className="mb-5 flex items-center justify-between">
+                <Button asChild size="lg" variant="primary">
+                  <Link href={localizedPath(locale, "/#contact")}>{ui.book}</Link>
+                </Button>
+                <LanguageSwitcher />
+              </div>
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-clay">
-                {contactChannels().map((c) => (
+                {channels.map((c) => (
                   <a
                     key={c.label}
                     href={c.href}
@@ -148,7 +162,7 @@ export function SiteHeader() {
                   </a>
                 ))}
               </div>
-              <p className="mt-4 text-xs text-clay/70">{site.location}</p>
+              <p className="mt-4 text-xs text-clay/70">{location}</p>
             </motion.div>
           </motion.div>
         )}

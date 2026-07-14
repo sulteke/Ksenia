@@ -6,11 +6,13 @@ import { WordReveal } from "@/components/motion/text-reveal";
 import { Parallax } from "@/components/motion/parallax";
 import { Magnetic } from "@/components/motion/magnetic";
 import { ArtImage } from "@/components/shared/art-image";
-import { home } from "@/content/home";
-import { stats } from "@/content/approach";
+import { getHome } from "@/content/home";
+import { getStats } from "@/content/approach";
+import { localizedPath, type Locale } from "@/i18n/config";
 
-export function Hero() {
-  const { hero } = home;
+export function Hero({ locale }: { locale: Locale }) {
+  const hero = getHome(locale).hero;
+  const stats = getStats(locale);
 
   return (
     <section className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-24 lg:pt-44">
@@ -58,11 +60,13 @@ export function Hero() {
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Magnetic strength={0.4}>
                 <Button asChild size="lg" variant="primary">
-                  <Link href={hero.primaryCta.href}>{hero.primaryCta.label}</Link>
+                  <Link href={localizedPath(locale, hero.primaryCta.href)}>
+                    {hero.primaryCta.label}
+                  </Link>
                 </Button>
               </Magnetic>
               <Button asChild size="lg" variant="outline">
-                <Link href={hero.secondaryCta.href}>
+                <Link href={localizedPath(locale, hero.secondaryCta.href)}>
                   {hero.secondaryCta.label}
                 </Link>
               </Button>

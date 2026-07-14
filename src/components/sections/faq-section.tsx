@@ -7,19 +7,24 @@ import {
 } from "@/components/ui/accordion";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
+import { getUi } from "@/content/ui";
+import { localizedPath, type Locale } from "@/i18n/config";
 import type { Faq } from "@/content/types";
 
 export function FaqSection({
+  locale,
   faqs,
-  eyebrow = "Questions & answers",
-  title = "Everything you might be wondering.",
+  eyebrow,
+  title,
   id = "faq",
 }: {
+  locale: Locale;
   faqs: Faq[];
-  eyebrow?: string;
-  title?: string;
+  eyebrow: string;
+  title: string;
   id?: string;
 }) {
+  const help = getUi(locale).faqHelp;
   return (
     <section id={id} className="container-x py-24 sm:py-32 lg:py-40">
       <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
@@ -31,14 +36,14 @@ export function FaqSection({
           />
           <Reveal delay={0.15}>
             <p className="mt-6 max-w-sm text-espresso/70">
-              Still unsure? The kindest first step is simply a conversation.{" "}
+              {help.pre}
               <Link
-                href="/#contact"
+                href={localizedPath(locale, "/#contact")}
                 className="link-underline font-medium text-gold"
               >
-                Reach out
-              </Link>{" "}
-              and I’ll answer personally.
+                {help.link}
+              </Link>
+              {help.post}
             </p>
           </Reveal>
         </div>

@@ -5,9 +5,13 @@ import { Reveal } from "@/components/motion/reveal";
 import { Parallax } from "@/components/motion/parallax";
 import { ArtImage } from "@/components/shared/art-image";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { about } from "@/content/about";
+import { getAbout } from "@/content/about";
+import { getUi } from "@/content/ui";
+import { localizedPath, type Locale } from "@/i18n/config";
 
-export function AboutPreview() {
+export function AboutPreview({ locale }: { locale: Locale }) {
+  const about = getAbout(locale);
+  const ui = getUi(locale);
   return (
     <section id="about" className="container-x py-24 sm:py-32 lg:py-40">
       <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
@@ -54,8 +58,8 @@ export function AboutPreview() {
           <Reveal delay={0.3}>
             <div className="mt-9">
               <Button asChild variant="outline" size="md">
-                <Link href="/about">
-                  Read my story
+                <Link href={localizedPath(locale, "/about")}>
+                  {ui.readStory}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>

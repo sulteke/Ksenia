@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowDown, ArrowRight, Check, Sparkles, Moon, Sun, Sunrise } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,35 +10,41 @@ import { ArtImage } from "@/components/shared/art-image";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { FaqSection } from "@/components/sections/faq-section";
 import { CtaBand } from "@/components/sections/cta-band";
-import { journeys } from "@/content/journeys";
+import { getJourneys } from "@/content/journeys";
 import { getService } from "@/content/services";
+import { getUi, type Ui } from "@/content/ui";
 import { buildMetadata, faqSchema } from "@/lib/seo";
+import { localizedPath, type Locale } from "@/i18n/config";
 import type { Journey } from "@/content/types";
-
-const journeysService = getService("journeys");
-
-export const metadata = buildMetadata({
-  title: "Women’s Transformational Journeys",
-  description:
-    "Author’s luxury journeys for women — travel, nature, slow living and quiet transformation. Not a retreat, not tourism. A homecoming.",
-  path: "/journeys",
-});
-
-const WEAVE = [
-  "Luxury travel",
-  "Untouched nature",
-  "Beautiful hotels",
-  "Real pleasure",
-  "Slow living",
-  "Meaningful conversation",
-  "Self-discovery",
-  "Inner transformation",
-  "Unforgettable beauty",
-];
 
 const DAY_ICONS = [Sunrise, Sun, Moon];
 
-export default function JourneysPage() {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const service = getService(locale, "journeys");
+  return buildMetadata({
+    locale,
+    title: service?.name,
+    description: service?.summary,
+    path: "/journeys",
+  });
+}
+
+export default async function JourneysPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  const journeys = getJourneys(locale);
+  const ui = getUi(locale);
+  const t = ui.journeysPage;
+  const journeysService = getService(locale, "journeys");
+
   return (
     <>
       {/* IMMERSIVE HERO */}
@@ -61,20 +68,18 @@ export default function JourneysPage() {
         <div className="container-x relative pb-20 pt-40">
           <Reveal>
             <span className="text-overline uppercase text-gold-soft">
-              Author’s journeys for women
+              {t.heroEyebrow}
             </span>
           </Reveal>
           <h1 className="mt-6 max-w-4xl text-balance font-display text-5xl leading-[1.05] text-cream text-shadow-soft sm:text-6xl lg:text-7xl">
-            <WordReveal text="Travel that returns you" delay={0.1} />{" "}
+            <WordReveal text={t.heroTitleMain} delay={0.1} />{" "}
             <span className="italic text-gold-soft">
-              <WordReveal text="to yourself." delay={0.5} />
+              <WordReveal text={t.heroTitleAccent} delay={0.5} />
             </span>
           </h1>
           <Reveal delay={0.7}>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-cream/85">
-              Not a retreat. Not ordinary tourism. Intimate journeys where
-              luxury, nature and deep conversation quietly change you — and you
-              come home with more than photographs.
+              {t.heroSubtitle}
             </p>
           </Reveal>
           <Reveal delay={0.85}>
@@ -82,7 +87,7 @@ export default function JourneysPage() {
               <Magnetic strength={0.4}>
                 <Button asChild size="lg" variant="soft">
                   <Link href="#upcoming">
-                    View upcoming journeys
+                    {t.viewUpcoming}
                     <ArrowDown className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -93,7 +98,9 @@ export default function JourneysPage() {
                 variant="outline"
                 className="border-cream/30 text-cream hover:border-cream/70 hover:bg-cream/[0.06]"
               >
-                <Link href="/#contact">Request an invitation</Link>
+                <Link href={localizedPath(locale, "/#contact")}>
+                  {t.requestInvite}
+                </Link>
               </Button>
             </div>
           </Reveal>
@@ -103,13 +110,13 @@ export default function JourneysPage() {
       {/* WHAT THESE ARE */}
       <section className="container-x py-24 sm:py-32">
         <SectionHeading
-          eyebrow="A different kind of journey"
-          title="Everything you love about travel — with a soul underneath."
-          lede="These journeys weave together beauty and depth in a way most trips never dare to. Luxury that means something. Rest that changes you."
+          eyebrow={t.whatEyebrow}
+          title={t.whatTitle}
+          lede={t.whatLede}
           align="center"
         />
         <Stagger className="mx-auto mt-12 flex max-w-4xl flex-wrap justify-center gap-3">
-          {WEAVE.map((w) => (
+          {t.weave.map((w) => (
             <StaggerItem key={w}>
               <span className="inline-flex items-center gap-2 rounded-full bg-cream/70 px-5 py-2.5 font-display text-lg text-ink ring-1 ring-espresso/[0.06]">
                 <Sparkles className="h-4 w-4 text-gold" />
@@ -123,13 +130,16 @@ export default function JourneysPage() {
       {/* UPCOMING JOURNEYS */}
       <div id="upcoming" className="scroll-mt-24">
         <div className="container-x">
-          <SectionHeading
-            eyebrow="Upcoming journeys"
-            title="Where we’re going next."
-          />
+          <SectionHeading eyebrow={t.upcomingEyebrow} title={t.upcomingTitle} />
         </div>
         {journeys.map((journey, i) => (
-          <JourneyFeature key={journey.slug} journey={journey} flip={i % 2 === 1} />
+          <JourneyFeature
+            key={journey.slug}
+            journey={journey}
+            flip={i % 2 === 1}
+            locale={locale}
+            ui={ui}
+          />
         ))}
       </div>
 
@@ -137,9 +147,10 @@ export default function JourneysPage() {
       {journeysService && (
         <>
           <FaqSection
+            locale={locale}
             faqs={journeysService.faqs}
-            eyebrow="Before you come"
-            title="Questions about the journeys."
+            eyebrow={t.faqEyebrow}
+            title={t.faqTitle}
           />
           <script
             type="application/ld+json"
@@ -151,17 +162,29 @@ export default function JourneysPage() {
       )}
 
       <CtaBand
-        eyebrow="Places are few"
-        title="Reserve your place."
-        body="Each journey is intentionally intimate. Tell me you’re interested and I’ll share the next one with you personally — no obligation, just an open door."
-        primary={{ label: "Request an invitation", href: "/#contact" }}
-        secondary={{ label: "See all the work", href: "/#services" }}
+        locale={locale}
+        eyebrow={t.ctaEyebrow}
+        title={t.ctaTitle}
+        body={t.ctaBody}
+        primary={{ label: t.ctaPrimary, href: "/#contact" }}
+        secondary={{ label: t.ctaSecondary, href: "/#services" }}
       />
     </>
   );
 }
 
-function JourneyFeature({ journey, flip }: { journey: Journey; flip: boolean }) {
+function JourneyFeature({
+  journey,
+  flip,
+  locale,
+  ui,
+}: {
+  journey: Journey;
+  flip: boolean;
+  locale: Locale;
+  ui: Ui;
+}) {
+  const t = ui.journeysPage;
   return (
     <section
       id={journey.slug}
@@ -182,11 +205,7 @@ function JourneyFeature({ journey, flip }: { journey: Journey; flip: boolean }) 
                 />
               </Parallax>
               <div className="absolute left-5 top-5 rounded-full bg-warmwhite/90 px-4 py-1.5 text-overline uppercase text-gold shadow-soft backdrop-blur">
-                {journey.status === "open"
-                  ? "Places open"
-                  : journey.status === "waitlist"
-                    ? "Waitlist"
-                    : "Coming soon"}
+                {ui.journeyStatus[journey.status]}
               </div>
             </div>
           </Reveal>
@@ -205,10 +224,10 @@ function JourneyFeature({ journey, flip }: { journey: Journey; flip: boolean }) 
 
             <div className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
               {[
-                { k: "When", v: journey.dates },
-                { k: "Length", v: `${journey.nights} nights` },
-                { k: "Places", v: `${journey.places} women` },
-                { k: "From", v: journey.priceFrom },
+                { k: t.statWhen, v: journey.dates },
+                { k: t.statLength, v: `${journey.nights} ${t.nightsWord}` },
+                { k: t.statPlaces, v: `${journey.places} ${t.womenWord}` },
+                { k: t.statFrom, v: journey.priceFrom },
               ].map((s) => (
                 <div key={s.k}>
                   <p className="text-overline uppercase text-clay/60">{s.k}</p>
@@ -234,8 +253,8 @@ function JourneyFeature({ journey, flip }: { journey: Journey; flip: boolean }) 
 
             <div className="mt-8">
               <Button asChild size="lg">
-                <Link href="/#contact">
-                  Reserve your place
+                <Link href={localizedPath(locale, "/#contact")}>
+                  {t.reserve}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -246,7 +265,7 @@ function JourneyFeature({ journey, flip }: { journey: Journey; flip: boolean }) 
         {/* Daily program + included */}
         <div className="mt-16 grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
           <div>
-            <h4 className="font-display text-2xl text-ink">A day, unhurried</h4>
+            <h4 className="font-display text-2xl text-ink">{t.dayTitle}</h4>
             <div className="mt-6 space-y-5">
               {journey.day.map((step, i) => {
                 const Icon = DAY_ICONS[i % DAY_ICONS.length];
@@ -273,7 +292,7 @@ function JourneyFeature({ journey, flip }: { journey: Journey; flip: boolean }) 
           </div>
 
           <div className="rounded-[1.75rem] bg-cream/50 p-8 ring-1 ring-espresso/[0.06]">
-            <h4 className="font-display text-2xl text-ink">What’s included</h4>
+            <h4 className="font-display text-2xl text-ink">{t.included}</h4>
             <ul className="mt-5 space-y-3">
               {journey.included.map((item) => (
                 <li key={item} className="flex items-start gap-3">

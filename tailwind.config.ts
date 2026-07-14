@@ -54,7 +54,7 @@ const config: Config = {
         ring: "#B0894F",
       },
       fontFamily: {
-        display: ["var(--font-fraunces)", "Georgia", "serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       fontSize: {

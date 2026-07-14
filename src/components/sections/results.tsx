@@ -3,9 +3,13 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { Parallax } from "@/components/motion/parallax";
 import { ArtImage } from "@/components/shared/art-image";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { results } from "@/content/approach";
+import { getResults } from "@/content/approach";
+import { getUi } from "@/content/ui";
+import type { Locale } from "@/i18n/config";
 
-export function Results() {
+export function Results({ locale }: { locale: Locale }) {
+  const results = getResults(locale);
+  const ui = getUi(locale);
   return (
     <section id="results" className="container-x py-24 sm:py-32 lg:py-40">
       <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
@@ -24,7 +28,7 @@ export function Results() {
             <div className="absolute inset-x-6 bottom-6">
               <div className="glass rounded-2xl px-6 py-5 shadow-soft">
                 <p className="font-display text-xl italic leading-snug text-ink">
-                  “The exhale you didn’t know you were holding.”
+                  “{ui.results.quote}”
                 </p>
               </div>
             </div>

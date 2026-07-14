@@ -9,13 +9,27 @@ import { ArtImage } from "@/components/shared/art-image";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { FaqSection } from "@/components/sections/faq-section";
 import { CtaBand } from "@/components/sections/cta-band";
-import { testimonials } from "@/content/testimonials";
+import { getTestimonials } from "@/content/testimonials";
+import { getUi } from "@/content/ui";
+import { localizedPath, type Locale } from "@/i18n/config";
 import type { Service } from "@/content/types";
 
-export function ServiceDetail({ service }: { service: Service }) {
-  const quotes = testimonials
+export function ServiceDetail({
+  service,
+  locale,
+}: {
+  service: Service;
+  locale: Locale;
+}) {
+  const ui = getUi(locale).serviceDetail;
+  const quotes = getTestimonials(locale)
     .filter((t) => t.service === service.name)
     .slice(0, 2);
+
+  const meet = [
+    { icon: Video, title: ui.meetOnlineTitle, body: ui.meetOnlineBody },
+    { icon: MapPin, title: ui.meetInPersonTitle, body: ui.meetInPersonBody },
+  ];
 
   return (
     <>
@@ -33,12 +47,15 @@ export function ServiceDetail({ service }: { service: Service }) {
           <div>
             <Reveal>
               <nav className="mb-7 flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-clay/70">
-                <Link href="/" className="hover:text-gold">
-                  Home
+                <Link href={localizedPath(locale, "/")} className="hover:text-gold">
+                  {ui.home}
                 </Link>
                 <span>/</span>
-                <Link href="/#services" className="hover:text-gold">
-                  Work
+                <Link
+                  href={localizedPath(locale, "/#services")}
+                  className="hover:text-gold"
+                >
+                  {ui.work}
                 </Link>
                 <span>/</span>
                 <span className="text-espresso">{service.name}</span>
@@ -59,14 +76,14 @@ export function ServiceDetail({ service }: { service: Service }) {
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <Magnetic strength={0.4}>
                   <Button asChild size="lg">
-                    <Link href="/#contact">
+                    <Link href={localizedPath(locale, "/#contact")}>
                       {service.cta.action}
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
                 </Magnetic>
                 <Button asChild size="lg" variant="outline">
-                  <Link href="#process">See how it works</Link>
+                  <Link href="#process">{ui.seeHow}</Link>
                 </Button>
               </div>
             </Reveal>
@@ -103,18 +120,7 @@ export function ServiceDetail({ service }: { service: Service }) {
       {/* HOW WE MEET */}
       <section className="container-x py-16 lg:py-20">
         <Stagger className="grid gap-5 sm:grid-cols-2">
-          {[
-            {
-              icon: Video,
-              title: "Online, from anywhere",
-              body: "Held over video in the quiet of your own space — the same depth as being in the room, and often even easier to relax into.",
-            },
-            {
-              icon: MapPin,
-              title: "In person, by appointment",
-              body: "In a calm, private setting designed for you to fully let go. A held, unhurried space that is entirely yours.",
-            },
-          ].map((item) => (
+          {meet.map((item) => (
             <StaggerItem
               key={item.title}
               className="flex flex-col gap-4 rounded-[1.75rem] bg-cream/50 p-8 ring-1 ring-espresso/[0.06]"
@@ -144,7 +150,7 @@ export function ServiceDetail({ service }: { service: Service }) {
           </Reveal>
           <div>
             <SectionHeading
-              eyebrow="Is this for you?"
+              eyebrow={ui.isThisForYou}
               title={service.forWhom.title}
               titleClassName="text-display-md"
             />
@@ -168,8 +174,8 @@ export function ServiceDetail({ service }: { service: Service }) {
       {/* BENEFITS */}
       <section className="container-x py-20 sm:py-28">
         <SectionHeading
-          eyebrow="What shifts"
-          title="The change you can feel."
+          eyebrow={ui.whatShiftsEyebrow}
+          title={ui.whatShiftsTitle}
           align="center"
         />
         <Stagger className="mt-14 grid gap-6 sm:grid-cols-2">
@@ -195,8 +201,8 @@ export function ServiceDetail({ service }: { service: Service }) {
       >
         <div className="container-x">
           <SectionHeading
-            eyebrow="The experience"
-            title="How our work unfolds."
+            eyebrow={ui.experienceEyebrow}
+            title={ui.experienceTitle}
             align="center"
           />
           <Stagger className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -223,8 +229,8 @@ export function ServiceDetail({ service }: { service: Service }) {
       {/* RESULTS */}
       <section className="container-x py-20 sm:py-28">
         <SectionHeading
-          eyebrow="Afterwards"
-          title="What you can expect to carry with you."
+          eyebrow={ui.afterwardsEyebrow}
+          title={ui.afterwardsTitle}
           align="center"
         />
         <Stagger className="mx-auto mt-12 flex max-w-3xl flex-wrap justify-center gap-3">
@@ -265,19 +271,21 @@ export function ServiceDetail({ service }: { service: Service }) {
 
       {/* FAQ */}
       <FaqSection
+        locale={locale}
         faqs={service.faqs}
-        eyebrow="Good to know"
-        title={`Questions about ${service.name}.`}
+        eyebrow={ui.goodToKnow}
+        title={ui.faqTitle}
         id="faq"
       />
 
       {/* CTA */}
       <CtaBand
-        eyebrow="Ready when you are"
+        locale={locale}
+        eyebrow={ui.readyWhenYouAre}
         title={service.cta.title}
         body={service.cta.body}
         primary={{ label: service.cta.action, href: "/#contact" }}
-        secondary={{ label: "Explore other work", href: "/#services" }}
+        secondary={{ label: ui.exploreOtherWork, href: "/#services" }}
       />
     </>
   );

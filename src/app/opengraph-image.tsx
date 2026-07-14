@@ -1,7 +1,9 @@
 import { ImageResponse } from "next/og";
-import { site } from "@/content/site";
+import { site, getSiteCopy } from "@/content/site";
 
-export const alt = `${site.name} — ${site.tagline}`;
+// Kept in Latin script (brand + English tagline) so the default OG font renders
+// cleanly; the on-page metadata is fully localised per locale.
+export const alt = `${site.name} — ${getSiteCopy("en").tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

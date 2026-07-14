@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SunMark } from "@/components/shared/logo";
 import { Reveal } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
+import { localizedPath, type Locale } from "@/i18n/config";
 
 interface CtaLink {
   label: string;
@@ -12,12 +13,14 @@ interface CtaLink {
 
 /** Reusable closing call-to-action band, used on the home and detail pages. */
 export function CtaBand({
+  locale,
   eyebrow,
   title,
   body,
   primary,
   secondary,
 }: {
+  locale: Locale;
   eyebrow?: string;
   title: string;
   body?: string;
@@ -54,7 +57,7 @@ export function CtaBand({
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Magnetic strength={0.4}>
                 <Button asChild size="lg" variant="gold">
-                  <Link href={primary.href}>
+                  <Link href={localizedPath(locale, primary.href)}>
                     {primary.label}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -67,7 +70,9 @@ export function CtaBand({
                   variant="outline"
                   className="border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/[0.06]"
                 >
-                  <Link href={secondary.href}>{secondary.label}</Link>
+                  <Link href={localizedPath(locale, secondary.href)}>
+                    {secondary.label}
+                  </Link>
                 </Button>
               )}
             </div>

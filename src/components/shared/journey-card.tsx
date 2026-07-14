@@ -2,19 +2,27 @@ import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ArtImage } from "@/components/shared/art-image";
+import { getUi } from "@/content/ui";
+import { localizedPath, type Locale } from "@/i18n/config";
 import type { Journey } from "@/content/types";
 
-const STATUS: Record<Journey["status"], { label: string; className: string }> = {
-  open: { label: "Places open", className: "bg-gold text-warmwhite" },
-  waitlist: { label: "Waitlist", className: "bg-olive text-warmwhite" },
-  soon: { label: "Coming soon", className: "bg-clay text-warmwhite" },
+const STATUS_CLASS: Record<Journey["status"], string> = {
+  open: "bg-gold text-warmwhite",
+  waitlist: "bg-olive text-warmwhite",
+  soon: "bg-clay text-warmwhite",
 };
 
-export function JourneyCard({ journey }: { journey: Journey }) {
-  const status = STATUS[journey.status];
+export function JourneyCard({
+  journey,
+  locale,
+}: {
+  journey: Journey;
+  locale: Locale;
+}) {
+  const ui = getUi(locale);
   return (
     <Link
-      href={`/journeys#${journey.slug}`}
+      href={localizedPath(locale, `/journeys#${journey.slug}`)}
       className="group flex h-full flex-col overflow-hidden rounded-[2rem] bg-warmwhite shadow-soft ring-1 ring-espresso/[0.07] transition-shadow duration-700 hover:shadow-lift"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -29,10 +37,10 @@ export function JourneyCard({ journey }: { journey: Journey }) {
         <span
           className={cn(
             "absolute left-5 top-5 rounded-full px-3.5 py-1.5 text-overline uppercase shadow-soft",
-            status.className,
+            STATUS_CLASS[journey.status],
           )}
         >
-          {status.label}
+          {ui.journeyStatus[journey.status]}
         </span>
       </div>
 
@@ -57,7 +65,8 @@ export function JourneyCard({ journey }: { journey: Journey }) {
           <div>
             <p className="text-sm text-espresso/80">{journey.dates}</p>
             <p className="text-xs text-clay">
-              {journey.nights} nights · {journey.places} places · from{" "}
+              {journey.nights} {ui.journeyCard.nightsWord} · {journey.places}{" "}
+              {ui.journeyCard.placesWord} · {ui.journeyCard.fromWord}{" "}
               {journey.priceFrom}
             </p>
           </div>

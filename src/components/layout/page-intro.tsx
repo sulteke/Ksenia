@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { SunMark } from "@/components/shared/logo";
 import { site } from "@/content/site";
+import { getUi } from "@/content/ui";
+import type { Locale } from "@/i18n/config";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /** One-time cinematic loader. Renders on first paint, then lifts away. */
-export function PageIntro() {
+export function PageIntro({ locale }: { locale: Locale }) {
   const [show, setShow] = useState(true);
+  const tagline = getUi(locale).intro.tagline;
 
   useEffect(() => {
     const seen =
@@ -68,7 +71,7 @@ export function PageIntro() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.7 }}
           >
-            Come home to yourself
+            {tagline}
           </motion.p>
         </motion.div>
       )}

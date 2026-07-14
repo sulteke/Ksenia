@@ -1,17 +1,10 @@
 import { Marquee } from "@/components/motion/marquee";
-
-const words = [
-  "Calmer",
-  "More rested",
-  "Clearer",
-  "Lighter",
-  "More present",
-  "Reconnected",
-  "At home in yourself",
-];
+import { getUi } from "@/content/ui";
+import type { Locale } from "@/i18n/config";
 
 /** A slow-drifting band of felt outcomes — the emotional payoff, stated early. */
-export function MarqueeStrip() {
+export function MarqueeStrip({ locale }: { locale: Locale }) {
+  const words = getUi(locale).marqueeWords;
   return (
     <section
       aria-label="How clients feel"

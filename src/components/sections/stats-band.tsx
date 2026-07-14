@@ -1,8 +1,10 @@
 import { Reveal } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
-import { stats } from "@/content/approach";
+import { getStats } from "@/content/approach";
+import type { Locale } from "@/i18n/config";
 
-export function StatsBand() {
+export function StatsBand({ locale }: { locale: Locale }) {
+  const stats = getStats(locale);
   return (
     <section className="grain relative isolate overflow-hidden bg-ink py-20 text-cream lg:py-24">
       <div

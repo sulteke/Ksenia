@@ -1,8 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { SunMark } from "@/components/shared/logo";
+import { getUi } from "@/content/ui";
+import { defaultLocale, isLocale, localizedPath } from "@/i18n/config";
 
 export default function NotFound() {
+  const pathname = usePathname();
+  const seg = pathname.split("/").filter(Boolean)[0];
+  const locale = isLocale(seg) ? seg : defaultLocale;
+  const ui = getUi(locale).notFound;
+
   return (
     <section className="relative flex min-h-[80vh] items-center overflow-hidden">
       <div
@@ -18,19 +28,14 @@ export default function NotFound() {
         <p className="mt-8 font-display text-[6rem] leading-none text-ink sm:text-[9rem]">
           404
         </p>
-        <h1 className="mt-4 font-display text-3xl text-ink">
-          This path has drifted off the map.
-        </h1>
-        <p className="mt-4 max-w-md text-espresso/70">
-          The page you were looking for isn’t here — but every good journey has
-          a wrong turn or two. Let’s guide you back.
-        </p>
+        <h1 className="mt-4 font-display text-3xl text-ink">{ui.title}</h1>
+        <p className="mt-4 max-w-md text-espresso/70">{ui.body}</p>
         <div className="mt-9 flex flex-wrap justify-center gap-3">
           <Button asChild size="lg">
-            <Link href="/">Return home</Link>
+            <Link href={localizedPath(locale, "/")}>{ui.home}</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link href="/#contact">Get in touch</Link>
+            <Link href={localizedPath(locale, "/#contact")}>{ui.contact}</Link>
           </Button>
         </div>
       </div>

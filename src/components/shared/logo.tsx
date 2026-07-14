@@ -1,20 +1,23 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { site } from "@/content/site";
+import { localizedPath, type Locale } from "@/i18n/config";
 
 /** The Aurelia wordmark with a fine "rising sun" emblem. */
 export function Logo({
   className,
   tone = "ink",
   withMark = true,
+  locale,
 }: {
   className?: string;
   tone?: "ink" | "cream";
   withMark?: boolean;
+  locale: Locale;
 }) {
   return (
     <Link
-      href="/"
+      href={localizedPath(locale, "/")}
       aria-label={`${site.name} — home`}
       className={cn(
         "group inline-flex items-center gap-2.5 leading-none",

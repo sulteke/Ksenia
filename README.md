@@ -15,10 +15,12 @@ mobile experience, and a full SEO/performance setup.
 ## Stack
 
 - **Next.js 15** (App Router) · **React 19** · **TypeScript**
+- **Bilingual** 🇷🇺 🇬🇧 — Russian (default) + English, at `/ru` and `/en`
 - **Tailwind CSS** design system (warm‑neutral tokens, fluid type scale)
+- **Playfair Display** (display serif, Latin + Cyrillic) + **Inter** (body)
 - **Framer Motion** for the motion system
 - **Radix UI** primitives, styled in **shadcn/ui** style (`components/ui`)
-- Static‑first: every route prerenders to HTML.
+- Static‑first: every route prerenders to HTML for **both** locales.
 
 ## Getting started
 
@@ -33,22 +35,38 @@ npm run start      # serve the production build
 
 ```
 src/
-  app/                     # routes (App Router) + sitemap / robots / manifest / OG image
-    page.tsx               # home — the full narrative
-    about/                 # About
-    energy-therapy/        # ┐ service detail pages (share ServiceDetail template)
-    transformational-game/ # ┘
-    journeys/              # bespoke luxury‑travel page
+  middleware.ts            # locale detection + redirects ("/" → "/ru")
+  app/
+    [locale]/              # all pages live under the locale segment (/ru, /en)
+      layout.tsx           #   root layout: fonts, <html lang>, header/footer
+      page.tsx             #   home — the full narrative
+      about/               #   About
+      energy-therapy/      #   ┐ service detail pages (share ServiceDetail template)
+      transformational-game/ # ┘
+      journeys/            #   bespoke luxury‑travel page
+      not-found.tsx        #   localized 404
+    sitemap.ts robots.ts manifest.ts opengraph-image.tsx icon.svg
+  i18n/                    # config.ts (locales, helpers) — the i18n source of truth
   components/
-    layout/                # header, footer, loader, scroll progress, sticky mobile CTA
+    layout/                # header, footer, loader, scroll progress, mobile CTA, language switcher
     sections/              # every page section (hero, services, testimonials, gallery…)
     motion/                # Reveal, Stagger, Parallax, Magnetic, Marquee, WordReveal, Counter
     shared/                # ArtImage, Logo, SectionHeading, JourneyCard
     ui/                    # Button, Accordion, Dialog (shadcn‑style, Radix‑powered)
-  content/                 # ← ALL editable copy & data (see content/README.md)
+  content/                 # ← ALL editable copy & data, per language (see content/README.md)
   hooks/                   # useReveal (robust in‑view trigger)
   lib/                     # cn(), SEO helpers + JSON‑LD, utils
 ```
+
+## Languages (i18n)
+
+Bilingual with locale‑prefixed URLs (`/ru`, `/en`). `src/middleware.ts` detects
+the visitor's language (cookie → `Accept-Language` → Russian default) and
+redirects `/`. Content lives per‑language in `src/content/*` as `ru` / `en`
+pairs; the header/footer carry a **language switcher** that keeps the current
+page. SEO is locale‑aware: per‑locale `<html lang>`, `<title>`, canonical +
+`hreflang` alternates, and a sitemap covering both locales. Change the default
+or add a language in `src/i18n/config.ts`.
 
 ## Content & “CMS”
 

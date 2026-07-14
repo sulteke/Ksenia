@@ -4,9 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { ArtImage } from "@/components/shared/art-image";
 import { JourneyCard } from "@/components/shared/journey-card";
-import { journeys } from "@/content/journeys";
+import { getJourneys } from "@/content/journeys";
+import { getUi } from "@/content/ui";
+import { localizedPath, type Locale } from "@/i18n/config";
 
-export function JourneysTeaser() {
+export function JourneysTeaser({ locale }: { locale: Locale }) {
+  const journeys = getJourneys(locale);
+  const ui = getUi(locale).journeysTeaser;
+
   return (
     <section className="py-24 sm:py-32 lg:py-40">
       {/* Immersive band */}
@@ -32,21 +37,19 @@ export function JourneysTeaser() {
             <div className="relative flex min-h-[26rem] flex-col justify-end p-8 sm:min-h-[34rem] sm:p-14">
               <div className="max-w-2xl">
                 <span className="text-overline uppercase text-gold-soft">
-                  The third direction · Women’s journeys
+                  {ui.eyebrow}
                 </span>
                 <h2 className="mt-5 text-balance font-display text-4xl leading-tight text-cream text-shadow-soft sm:text-5xl lg:text-6xl">
-                  Not a retreat. Not a holiday.
-                  <span className="italic text-gold-soft"> A homecoming.</span>
+                  {ui.titleMain}
+                  <span className="italic text-gold-soft"> {ui.titleAccent}</span>
                 </h2>
                 <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream/85">
-                  Author’s journeys for women — luxury, nature, slow living and
-                  deep conversation, woven into a few beautiful days that quietly
-                  change you.
+                  {ui.body}
                 </p>
                 <div className="mt-8">
                   <Button asChild size="lg" variant="soft">
-                    <Link href="/journeys">
-                      Discover the journeys
+                    <Link href={localizedPath(locale, "/journeys")}>
+                      {ui.cta}
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
@@ -61,19 +64,19 @@ export function JourneysTeaser() {
       <div className="container-x mt-12">
         <div className="mb-8 flex items-end justify-between">
           <h3 className="font-display text-2xl text-ink sm:text-3xl">
-            Upcoming journeys
+            {ui.upcoming}
           </h3>
           <Link
-            href="/journeys"
+            href={localizedPath(locale, "/journeys")}
             className="link-underline hidden text-sm font-medium text-espresso/80 hover:text-ink sm:inline-flex"
           >
-            View all
+            {ui.viewAll}
           </Link>
         </div>
         <Stagger className="grid gap-8 md:grid-cols-2">
           {journeys.map((j) => (
             <StaggerItem key={j.slug}>
-              <JourneyCard journey={j} />
+              <JourneyCard journey={j} locale={locale} />
             </StaggerItem>
           ))}
         </Stagger>

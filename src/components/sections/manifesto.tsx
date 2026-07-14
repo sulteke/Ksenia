@@ -1,10 +1,11 @@
 import { SunMark } from "@/components/shared/logo";
 import { Reveal } from "@/components/motion/reveal";
-import { home } from "@/content/home";
+import { getHome } from "@/content/home";
+import type { Locale } from "@/i18n/config";
 
 /** A deep, still section — the philosophical heart of the site. */
-export function Manifesto() {
-  const { manifesto } = home;
+export function Manifesto({ locale }: { locale: Locale }) {
+  const manifesto = getHome(locale).manifesto;
   return (
     <section className="grain relative isolate overflow-hidden bg-espresso py-28 text-cream sm:py-36 lg:py-44">
       <div

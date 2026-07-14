@@ -5,6 +5,26 @@ need to touch any design or code files. Each file below controls one part of the
 site. Edit the text between the quotation marks `"..."`, save, and the site
 updates.
 
+## 🌍 Two languages (Russian + English)
+
+The site is bilingual: **Russian** (`/ru`, the default) and **English** (`/en`),
+with a switcher in the header. Inside most files you'll see two blocks — `ru`
+and `en`:
+
+```ts
+const ru = [ /* Russian text here */ ];
+const en = [ /* English text here */ ];
+```
+
+Edit the **matching block** for the language you want to change (change the
+Russian text inside `ru`, the English inside `en`). Keep both in sync so nothing
+looks half-translated. `src/content/ui.ts` holds the small interface labels
+(buttons, section titles) in the same `ru` / `en` pairs.
+
+- To change the **default language**, edit `defaultLocale` in `src/i18n/config.ts`.
+- **Photos, prices, dates and layout are shared** across both languages — only
+  the words differ.
+
 > Tip: keep the punctuation exactly as it is — the quotes `"`, commas `,` and
 > curly braces `{ }` are the “containers” that hold your words. Only change the
 > words **inside** the quotes.

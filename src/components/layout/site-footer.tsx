@@ -1,15 +1,26 @@
 import Link from "next/link";
 import { ArrowUpRight, ArrowUp } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
-import { site, footerNav, contactChannels } from "@/content/site";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import {
+  site,
+  getFooterNav,
+  getContactChannels,
+  getReachTitle,
+  getSiteCopy,
+} from "@/content/site";
+import { getUi } from "@/content/ui";
+import { localizedPath, type Locale } from "@/i18n/config";
 
-export function SiteFooter() {
+export function SiteFooter({ locale }: { locale: Locale }) {
   const year = new Date().getFullYear();
-  const channels = contactChannels();
+  const channels = getContactChannels(locale);
+  const footerNav = getFooterNav(locale);
+  const copy = getSiteCopy(locale);
+  const ui = getUi(locale);
 
   return (
     <footer className="grain relative isolate overflow-hidden bg-ink text-cream/75">
-      {/* Ambient warmth. */}
       <div
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full opacity-40 blur-3xl"
@@ -21,16 +32,15 @@ export function SiteFooter() {
 
       <div className="container-x relative py-20 lg:py-28">
         <div className="grid gap-14 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
-          {/* Brand */}
           <div className="max-w-sm">
-            <Logo tone="cream" />
+            <Logo tone="cream" locale={locale} />
             <p className="mt-6 text-pretty text-lg leading-relaxed text-cream/70">
-              {site.tagline}
+              {copy.tagline}
             </p>
-            <p className="mt-6 text-sm text-cream/50">{site.location}</p>
+            <p className="mt-6 text-sm text-cream/50">{copy.location}</p>
+            <LanguageSwitcher className="mt-6" tone="cream" />
           </div>
 
-          {/* Nav columns */}
           {footerNav.map((col) => (
             <div key={col.title}>
               <h4 className="text-overline uppercase text-gold-soft">
@@ -40,7 +50,7 @@ export function SiteFooter() {
                 {col.items.map((item) => (
                   <li key={item.label}>
                     <Link
-                      href={item.href}
+                      href={localizedPath(locale, item.href)}
                       className="link-underline text-[0.95rem] text-cream/70 transition-colors hover:text-cream"
                     >
                       {item.label}
@@ -51,9 +61,10 @@ export function SiteFooter() {
             </div>
           ))}
 
-          {/* Contact */}
           <div>
-            <h4 className="text-overline uppercase text-gold-soft">Reach me</h4>
+            <h4 className="text-overline uppercase text-gold-soft">
+              {getReachTitle(locale)}
+            </h4>
             <ul className="mt-5 space-y-4">
               {channels.map((c) => (
                 <li key={c.label}>
@@ -79,7 +90,6 @@ export function SiteFooter() {
           </div>
         </div>
 
-        {/* Giant wordmark */}
         <div className="mask-fade-b pointer-events-none mt-16 select-none">
           <p className="whitespace-nowrap text-center font-display text-[18vw] font-semibold leading-none text-cream/[0.05] lg:text-[15rem]">
             {site.name}
@@ -88,20 +98,26 @@ export function SiteFooter() {
 
         <div className="mt-4 flex flex-col items-center justify-between gap-6 border-t border-cream/10 pt-8 sm:flex-row">
           <p className="text-xs text-cream/45">
-            © {year} {site.name}. Crafted with care. All rights reserved.
+            © {year} {site.name}. {ui.footer.rights}
           </p>
           <div className="flex items-center gap-6 text-xs text-cream/45">
-            <Link href="/#" className="link-underline hover:text-cream/80">
-              Privacy
+            <Link
+              href={localizedPath(locale, "/#")}
+              className="link-underline hover:text-cream/80"
+            >
+              {ui.footer.privacy}
             </Link>
-            <Link href="/#" className="link-underline hover:text-cream/80">
-              Terms
+            <Link
+              href={localizedPath(locale, "/#")}
+              className="link-underline hover:text-cream/80"
+            >
+              {ui.footer.terms}
             </Link>
             <a
               href="#top"
               className="group inline-flex items-center gap-2 hover:text-cream/80"
             >
-              Back to top
+              {ui.footer.backToTop}
               <span className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/15 transition-colors group-hover:border-gold-soft/60">
                 <ArrowUp className="h-3.5 w-3.5" />
               </span>

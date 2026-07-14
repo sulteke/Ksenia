@@ -1,7 +1,9 @@
 import { Instagram, MessageCircle, Send, Mail, ArrowUpRight } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { site, contactChannels } from "@/content/site";
+import { getContactChannels, getSiteCopy } from "@/content/site";
+import { getUi } from "@/content/ui";
+import type { Locale } from "@/i18n/config";
 
 const ICONS: Record<string, React.ElementType> = {
   Instagram,
@@ -10,8 +12,10 @@ const ICONS: Record<string, React.ElementType> = {
   Email: Mail,
 };
 
-export function Contact() {
-  const channels = contactChannels();
+export function Contact({ locale }: { locale: Locale }) {
+  const channels = getContactChannels(locale);
+  const ui = getUi(locale).contact;
+  const location = getSiteCopy(locale).location;
   return (
     <section
       id="contact"
@@ -19,9 +23,9 @@ export function Contact() {
     >
       <div className="container-x">
         <SectionHeading
-          eyebrow="Begin the conversation"
-          title="Let’s find your way in."
-          lede="Reach out however feels easiest. I read and answer every message myself — there’s no funnel, no pressure, just a real reply from me."
+          eyebrow={ui.eyebrow}
+          title={ui.title}
+          lede={ui.lede}
           align="center"
         />
 
@@ -57,7 +61,7 @@ export function Contact() {
 
         <Reveal delay={0.2}>
           <p className="mt-12 text-center text-sm text-clay">
-            {site.location} · Replies within 24 hours
+            {location} · {ui.replies}
           </p>
         </Reveal>
       </div>
