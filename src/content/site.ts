@@ -11,7 +11,7 @@ export const site = {
   name: "Aurelia",
   /** Shown under the wordmark and in the browser tab. */
   wordmarkSuffix: "studio",
-  founder: "Aurelia",
+  founder: "Ksenia Mingalieva",
   // Used for canonical URLs, sitemap and Open Graph. Replace with the live domain.
   url: "https://aurelia.studio",
 
@@ -34,7 +34,7 @@ export const siteCopy: Record<
   ru: {
     role: "Энерготерапевт и проводник",
     tagline:
-      "Энергетическая терапия, трансформационная игра и авторские путешествия для женщин.",
+      "Энергоактивация, трансформационная игра и авторские путешествия для женщин.",
     description:
       "Спокойная частная практика для восстановления нервной системы, эмоционального баланса и способности к саморегуляции — через энергетическую терапию, трансформационную игру и авторские путешествия для женщин.",
     location: "Онлайн по всему миру · Личные сессии по записи",
@@ -54,7 +54,7 @@ export const getSiteCopy = (locale: Locale) => siteCopy[locale];
 const primaryNav: Record<Locale, NavItem[]> = {
   ru: [
     { label: "Обо мне", href: "/about" },
-    { label: "Энергетическая терапия", href: "/energy-therapy" },
+    { label: "Энергоактивация", href: "/energy-therapy" },
     { label: "Трансформационная игра", href: "/transformational-game" },
     { label: "Путешествия", href: "/journeys" },
     { label: "Контакты", href: "/#contact" },
@@ -84,7 +84,7 @@ const footerNav: Record<Locale, { title: string; items: NavItem[] }[]> = {
     {
       title: "Работа со мной",
       items: [
-        { label: "Энергетическая терапия", href: "/energy-therapy" },
+        { label: "Энергоактивация", href: "/energy-therapy" },
         { label: "Трансформационная игра", href: "/transformational-game" },
         { label: "Женские путешествия", href: "/journeys" },
       ],
