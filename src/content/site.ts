@@ -19,10 +19,10 @@ export const site = {
     email: "hello@aurelia.studio",
     // International format — click-to-chat links are generated from this.
     whatsapp: "+1 (555) 018 2200",
-    instagramHandle: "@aurelia.studio",
-    instagramUrl: "https://instagram.com/aurelia.studio",
-    telegramHandle: "@aurelia",
-    telegramUrl: "https://t.me/aurelia",
+    instagramHandle: "@ksenia_lightcode",
+    instagramUrl: "https://www.instagram.com/ksenia_lightcode",
+    telegramHandle: "@ksenia_lightcode",
+    telegramUrl: "https://t.me/ksenia_lightcode",
   },
 } as const;
 
